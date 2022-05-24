@@ -4,6 +4,7 @@
 package example
 
 import (
+	"github.com/ChainSafe/chainbridge-core/chains/evm/calls/contracts/erc20"
 	"os"
 	"os/signal"
 	"syscall"
@@ -24,7 +25,7 @@ import (
 	"github.com/ChainSafe/chainbridge-core/opentelemetry"
 	"github.com/ChainSafe/chainbridge-core/relayer"
 	"github.com/ChainSafe/chainbridge-core/store"
-	optimism "github.com/ChainSafe/chainbridge-optimism-module"
+	//optimism "github.com/ChainSafe/chainbridge-optimism-module"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
@@ -67,13 +68,20 @@ func Run() error {
 				t := signAndSend.NewSignAndSendTransactor(transaction.NewCeloTransaction, gasPricer, client)
 				bridgeContract := bridge.NewBridgeContract(client, common.HexToAddress(config.Bridge), t)
 
+				zeroAddress := common.HexToAddress("0x0000000000000000000000000000000000000000")
+
+				var airDropErc20Contract *erc20.ERC20Contract
+				if config.AirDropErc20Contract != zeroAddress {
+					airDropErc20Contract = erc20.NewERC20Contract(client, config.AirDropErc20Contract, nil)
+				}
+
 				eventHandler := listener.NewETHEventHandler(*bridgeContract)
 				eventHandler.RegisterEventHandler(config.Erc20Handler, listener.Erc20EventHandler)
 				eventHandler.RegisterEventHandler(config.Erc721Handler, listener.Erc721EventHandler)
 				eventHandler.RegisterEventHandler(config.GenericHandler, listener.GenericEventHandler)
 				evmListener := listener.NewEVMListener(client, eventHandler, common.HexToAddress(config.Bridge))
 
-				mh := voter.NewEVMMessageHandler(*bridgeContract)
+				mh := voter.NewEVMMessageHandler(*bridgeContract, *config, *airDropErc20Contract, t)
 				mh.RegisterMessageHandler(config.Erc20Handler, voter.ERC20MessageHandler)
 				mh.RegisterMessageHandler(config.Erc721Handler, voter.ERC721MessageHandler)
 				mh.RegisterMessageHandler(config.GenericHandler, voter.GenericMessageHandler)
@@ -81,15 +89,15 @@ func Run() error {
 				evmVoter := voter.NewVoter(mh, client, bridgeContract)
 				chains = append(chains, evm.NewEVMChain(evmListener, evmVoter, blockstore, config))
 			}
-		case "optimism":
-			{
-				chain, err := optimism.SetupDefaultOptimismChain(chainConfig, evmtransaction.NewTransaction, blockstore)
-				if err != nil {
-					panic(err)
-				}
-
-				chains = append(chains, chain)
-			}
+		//case "optimism":
+			//{
+			//	chain, err := optimism.SetupDefaultOptimismChain(chainConfig, evmtransaction.NewTransaction, blockstore)
+			//	if err != nil {
+			//		panic(err)
+			//	}
+			//
+			//	chains = append(chains, chain)
+			//}
 		}
 	}
 
