@@ -70,9 +70,9 @@ func Run() error {
 
 				zeroAddress := common.HexToAddress("0x0000000000000000000000000000000000000000")
 
-				var airDropErc20Contract *erc20.ERC20Contract
+				var airDropErc20Contract erc20.ERC20Contract
 				if config.AirDropErc20Contract != zeroAddress {
-					airDropErc20Contract = erc20.NewERC20Contract(client, config.AirDropErc20Contract, nil)
+					airDropErc20Contract = *erc20.NewERC20Contract(client, config.AirDropErc20Contract, nil)
 				}
 
 				eventHandler := listener.NewETHEventHandler(*bridgeContract)
@@ -81,7 +81,7 @@ func Run() error {
 				eventHandler.RegisterEventHandler(config.GenericHandler, listener.GenericEventHandler)
 				evmListener := listener.NewEVMListener(client, eventHandler, common.HexToAddress(config.Bridge))
 
-				mh := voter.NewEVMMessageHandler(*bridgeContract, *config, *airDropErc20Contract, t)
+				mh := voter.NewEVMMessageHandler(*bridgeContract, *config, airDropErc20Contract, t)
 				mh.RegisterMessageHandler(config.Erc20Handler, voter.ERC20MessageHandler)
 				mh.RegisterMessageHandler(config.Erc721Handler, voter.ERC721MessageHandler)
 				mh.RegisterMessageHandler(config.GenericHandler, voter.GenericMessageHandler)
