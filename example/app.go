@@ -77,7 +77,7 @@ func Run() error {
 						panic(err)
 					}
 
-					airDropErc20Contract = *erc20.NewERC20Contract(client, config.AirDropErc20Contract, nil)
+					airDropErc20Contract = *erc20.NewERC20Contract(client, config.AirDropErc20Contract, t)
 				}
 
 				eventHandler := listener.NewETHEventHandler(*bridgeContract)
