@@ -72,6 +72,11 @@ func Run() error {
 
 				var airDropErc20Contract erc20.ERC20Contract
 				if config.AirDropErc20Contract != zeroAddress {
+					err = client.EnsureHasBytecode(config.AirDropErc20Contract)
+					if err != nil {
+						panic(err)
+					}
+
 					airDropErc20Contract = *erc20.NewERC20Contract(client, config.AirDropErc20Contract, nil)
 				}
 
