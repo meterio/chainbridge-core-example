@@ -86,7 +86,8 @@ func Run() error {
 				mh.RegisterMessageHandler(config.Erc721Handler, voter.ERC721MessageHandler)
 				mh.RegisterMessageHandler(config.GenericHandler, voter.GenericMessageHandler)
 
-				evmVoter := voter.NewVoter(mh, client, bridgeContract)
+				domainId := config.GeneralChainConfig.Id
+				evmVoter := voter.NewVoter(mh, client, bridgeContract, *domainId)
 				chains = append(chains, evm.NewEVMChain(evmListener, evmVoter, blockstore, config))
 			}
 		//case "optimism":
