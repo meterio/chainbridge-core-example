@@ -5,6 +5,7 @@ package example
 
 import (
 	"github.com/ChainSafe/chainbridge-core/chains/evm/calls/contracts/erc20"
+	"github.com/ChainSafe/chainbridge-core/util"
 	"os"
 	"os/signal"
 	"syscall"
@@ -42,16 +43,23 @@ func Run() error {
 	}
 	blockstore := store.NewBlockStore(db)
 
+	proposalDB, err := lvldb.NewLvlDB(util.PROPOSAL)
+	if err != nil {
+		panic(err)
+	}
+	//defer proposalDB.Close()
+
 	chains := []relayer.RelayedChain{}
 	for _, chainConfig := range configuration.ChainConfigs {
 		switch chainConfig["type"] {
 		case "evm":
 			{
-				chain, err := evm.SetupDefaultEVMChain(chainConfig, evmtransaction.NewTransaction, blockstore)
+				chain, err := evm.SetupDefaultEVMChain(proposalDB, chainConfig, evmtransaction.NewTransaction, blockstore)
 				if err != nil {
 					panic(err)
 				}
 
+				log.Info().Msgf("SetupDefaultEVMChain %v", chain.DomainID())
 				chains = append(chains, chain)
 			}
 		case "celo":
@@ -80,22 +88,24 @@ func Run() error {
 					airDropErc20Contract = *erc20.NewERC20Contract(client, config.AirDropErc20Contract, t)
 				}
 
+				domainId := config.GeneralChainConfig.Id
+
+				emh := listener.NewEVMMessageHandler(*config, airDropErc20Contract, t)
 				eventHandler := listener.NewETHEventHandler(*bridgeContract)
 				eventHandler.RegisterEventHandler(config.Erc20Handler, listener.Erc20EventHandler)
 				eventHandler.RegisterEventHandler(config.Erc721Handler, listener.Erc721EventHandler)
 				eventHandler.RegisterEventHandler(config.GenericHandler, listener.GenericEventHandler)
-				evmListener := listener.NewEVMListener(client, eventHandler, common.HexToAddress(config.Bridge))
+				evmListener := listener.NewEVMListener(client, eventHandler, common.HexToAddress(config.Bridge), *emh, *domainId, proposalDB)
 
 				mh := voter.NewEVMMessageHandler(*bridgeContract, *config, airDropErc20Contract, t)
 				mh.RegisterMessageHandler(config.Erc20Handler, voter.ERC20MessageHandler)
 				mh.RegisterMessageHandler(config.Erc721Handler, voter.ERC721MessageHandler)
 				mh.RegisterMessageHandler(config.GenericHandler, voter.GenericMessageHandler)
 
-				domainId := config.GeneralChainConfig.Id
-				evmVoter := voter.NewVoter(mh, client, bridgeContract, *domainId)
+				evmVoter := voter.NewVoter(proposalDB, mh, client, bridgeContract, *domainId)
 				chains = append(chains, evm.NewEVMChain(evmListener, evmVoter, blockstore, config))
 			}
-		//case "optimism":
+			//case "optimism":
 			//{
 			//	chain, err := optimism.SetupDefaultOptimismChain(chainConfig, evmtransaction.NewTransaction, blockstore)
 			//	if err != nil {
