@@ -5,6 +5,7 @@ package example
 
 import (
 	"github.com/ChainSafe/chainbridge-core/chains/evm/calls/contracts/erc20"
+	"github.com/ChainSafe/chainbridge-core/chains/evm/calls/contracts/signatures"
 	"github.com/ChainSafe/chainbridge-core/util"
 	"os"
 	"os/signal"
@@ -88,6 +89,17 @@ func Run() error {
 					airDropErc20Contract = *erc20.NewERC20Contract(client, config.AirDropErc20Contract, t)
 				}
 
+
+				var signaturesContract signatures.SignaturesContract
+				if config.SignatureContract != zeroAddress {
+					err = client.EnsureHasBytecode(config.SignatureContract)
+					if err != nil {
+						panic(err)
+					}
+
+					signaturesContract = *signatures.NewSignaturesContract(client, config.SignatureContract)
+				}
+
 				domainId := config.GeneralChainConfig.Id
 
 				emh := listener.NewEVMMessageHandler(*config, airDropErc20Contract, t)
@@ -102,7 +114,7 @@ func Run() error {
 				mh.RegisterMessageHandler(config.Erc721Handler, voter.ERC721MessageHandler)
 				mh.RegisterMessageHandler(config.GenericHandler, voter.GenericMessageHandler)
 
-				evmVoter := voter.NewVoter(proposalDB, mh, client, bridgeContract, *domainId)
+				evmVoter := voter.NewVoter(proposalDB, mh, client, bridgeContract, &signaturesContract, *domainId)
 				chains = append(chains, evm.NewEVMChain(evmListener, evmVoter, blockstore, config))
 			}
 			//case "optimism":
