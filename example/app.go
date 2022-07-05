@@ -109,7 +109,7 @@ func Run() error {
 				eventHandler.RegisterEventHandler(config.GenericHandler, listener.GenericEventHandler)
 				evmListener := listener.NewEVMListener(client, eventHandler, common.HexToAddress(config.Bridge), *emh, *domainId, proposalDB)
 
-				mh := voter.NewEVMMessageHandler(*bridgeContract, *config, airDropErc20Contract, t)
+				mh := voter.NewEVMMessageHandler(*bridgeContract)
 				mh.RegisterMessageHandler(config.Erc20Handler, voter.ERC20MessageHandler)
 				mh.RegisterMessageHandler(config.Erc721Handler, voter.ERC721MessageHandler)
 				mh.RegisterMessageHandler(config.GenericHandler, voter.GenericMessageHandler)
