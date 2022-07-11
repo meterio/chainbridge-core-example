@@ -97,7 +97,7 @@ func Run() error {
 						panic(err)
 					}
 
-					signaturesContract = *signatures.NewSignaturesContract(client, config.SignatureContract)
+					signaturesContract = *signatures.NewSignaturesContract(client, config.SignatureContract, t)
 				}
 
 				domainId := config.GeneralChainConfig.Id
