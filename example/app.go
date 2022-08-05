@@ -33,6 +33,8 @@ import (
 	"github.com/spf13/viper"
 )
 
+var ZeroAddress = common.HexToAddress("0x0000000000000000000000000000000000000000")
+
 func Run() error {
 	errChn := make(chan error)
 	stopChn := make(chan struct{})
@@ -77,10 +79,8 @@ func Run() error {
 				t := signAndSend.NewSignAndSendTransactor(transaction.NewCeloTransaction, gasPricer, client)
 				bridgeContract := bridge.NewBridgeContract(client, common.HexToAddress(config.Bridge), t)
 
-				zeroAddress := common.HexToAddress("0x0000000000000000000000000000000000000000")
-
 				var airDropErc20Contract erc20.ERC20Contract
-				if config.AirDropErc20Contract != zeroAddress {
+				if config.AirDropErc20Contract != ZeroAddress {
 					err = client.EnsureHasBytecode(config.AirDropErc20Contract)
 					if err != nil {
 						panic(err)
@@ -89,9 +89,8 @@ func Run() error {
 					airDropErc20Contract = *erc20.NewERC20Contract(client, config.AirDropErc20Contract, t)
 				}
 
-
 				var signaturesContract signatures.SignaturesContract
-				if config.SignatureContract != zeroAddress {
+				if config.SignatureContract != ZeroAddress {
 					err = client.EnsureHasBytecode(config.SignatureContract)
 					if err != nil {
 						panic(err)
@@ -114,7 +113,7 @@ func Run() error {
 				mh.RegisterMessageHandler(config.Erc721Handler, voter.ERC721MessageHandler)
 				mh.RegisterMessageHandler(config.GenericHandler, voter.GenericMessageHandler)
 
-				evmVoter := voter.NewVoter(proposalDB, mh, client, bridgeContract, &signaturesContract, *domainId)
+				evmVoter := voter.NewVoter(proposalDB, mh, client, bridgeContract, &signaturesContract, *domainId, config.DelayVoteProposals)
 				chains = append(chains, evm.NewEVMChain(evmListener, evmVoter, blockstore, config))
 			}
 			//case "optimism":
