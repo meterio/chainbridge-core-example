@@ -127,6 +127,7 @@ func Run() error {
 			//}
 		}
 	}
+	util.PathKeypair = nil
 
 	r := relayer.NewRelayer(chains, &opentelemetry.ConsoleTelemetry{})
 	go r.Start(stopChn, errChn)
