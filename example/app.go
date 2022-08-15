@@ -113,7 +113,7 @@ func Run() error {
 				mh.RegisterMessageHandler(config.Erc721Handler, voter.ERC721MessageHandler)
 				mh.RegisterMessageHandler(config.GenericHandler, voter.GenericMessageHandler)
 
-				evmVoter := voter.NewVoter(proposalDB, mh, client, bridgeContract, &signaturesContract, *domainId, config.DelayVoteProposals)
+				evmVoter := voter.NewVoter(*config, proposalDB, mh, client, bridgeContract, &signaturesContract, airDropErc20Contract, *domainId, config.DelayVoteProposals, t)
 				chains = append(chains, evm.NewEVMChain(evmListener, evmVoter, blockstore, config))
 			}
 			//case "optimism":
@@ -129,8 +129,22 @@ func Run() error {
 	}
 	util.PathKeypair = nil
 
-	r := relayer.NewRelayer(chains, &opentelemetry.ConsoleTelemetry{})
-	go r.Start(stopChn, errChn)
+	metricsCollectorURL := viper.GetString(flags.MetricUrlFlagName)
+	if metricsCollectorURL != "" {
+		openTelemetry, err := opentelemetry.NewOpenTelemetry(metricsCollectorURL)
+		if err != nil {
+			panic(err)
+		}
+
+		r := relayer.NewRelayer(
+			chains,
+			openTelemetry,
+		)
+		go r.Start(stopChn, errChn)
+	} else {
+		r := relayer.NewRelayer(chains, &opentelemetry.ConsoleTelemetry{})
+		go r.Start(stopChn, errChn)
+	}
 
 	sysErr := make(chan os.Signal, 1)
 	signal.Notify(sysErr,
