@@ -4,6 +4,7 @@
 package example
 
 import (
+	_ "github.com/ChainSafe/chainbridge-core/config/chain"
 	"os"
 	"os/signal"
 	"syscall"
@@ -123,6 +124,8 @@ func Run() error {
 	util.PathKeypair = nil
 
 	if openTelemetryInst != nil {
+		openTelemetryInst.MonitorHeadBlocks(chains)
+		openTelemetryInst.MonitorSyncBlocks(chains)
 		r := relayer.NewRelayer(
 			chains,
 			openTelemetryInst,
