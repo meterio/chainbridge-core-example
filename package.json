@@ -1,0 +1,29 @@
+{
+  "name": "chainbridge-core-example",
+  "version": "1.0.0",
+  "description": "<a href=\"https://discord.gg/ykXsJKfhgq\">   <img alt=\"discord\" src=\"https://img.shields.io/discord/593655374469660673?label=Discord&logo=discord&style=flat\" /> </a>",
+  "main": "src/setup.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "setup": "node ./src/setup.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChainSafe/chainbridge-core-example.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ChainSafe/chainbridge-core-example/issues"
+  },
+  "homepage": "https://github.com/ChainSafe/chainbridge-core-example#readme",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "child_process": "^1.0.2",
+    "dotenv": "^16.0.3",
+    "web3": "^1.8.0"
+  }
+}

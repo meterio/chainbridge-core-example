@@ -1,0 +1,133 @@
+[
+  {
+    "address": "0xDB021b1B247fe2F1fa57e0A87C748Cc1E321F07F",
+    "name": "AmpleForth",
+    "symbol": "AMPL",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/AMPL/logo.png",
+    "resourceId": "0x1f3eb8ee12ce38ffa19fc4c635621ad2c9a0bd609def9ddce77680e33bc2224b",
+    "native": false,
+    "decimals": 9,
+    "coinId": "ampleforth"
+  },
+  {
+    "address": "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
+    "name": "BTCB",
+    "symbol": "BTC.bsc",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/BTC.bsc/logo.png",
+    "resourceId": "0x00000000000000000000007130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c01",
+    "native": false,
+    "decimals": 18,
+    "coinId": "bitcoin"
+  },
+  {
+    "address": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+    "name": "BUSD",
+    "symbol": "BUSD",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/BUSD/logo.png",
+    "resourceId": "0x0000000000000000000000e9e7cea3dedca5984780bafc599bd69add087d5601",
+    "native": false,
+    "decimals": 18,
+    "coinId": "binance-usd"
+  },
+  {
+    "address": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "name": "CAKE",
+    "symbol": "CAKE",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/CAKE/logo.png",
+    "resourceId": "0x00000000000000000000000e09fabb73bd3ade0a17ecc321fd13a19e81ce8201",
+    "native": false,
+    "decimals": 18,
+    "coinId": "pancakeswap-token"
+  },
+  {
+    "address": "0xe795347731Bc547F4E4643F7945738cE2BC18529",
+    "name": "Cliq Token",
+    "symbol": "CLIQ",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/CLIQ/logo.png",
+    "resourceId": "0x00000000000000000000000def8d8adde14c9ef7c2a986df3ea4bd6582676701",
+    "native": false,
+    "decimals": 18,
+    "coinId": "deficliq"
+  },
+  {
+    "address": "0xbcf39F0EDDa668C58371E519AF37CA705f2bFcbd",
+    "name": "Crowns",
+    "symbol": "pCWS",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/CWS/logo.png",
+    "resourceId": "0x0000000000000000000000ac0104cca91d167873b8601d2e71eb3d4d8c33e001",
+    "native": false,
+    "decimals": 18,
+    "coinId": "crowns"
+  },
+  {
+    "address": "0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3",
+    "name": "DAI",
+    "symbol": "DAI.bsc",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/DAI.bsc/logo.png",
+    "resourceId": "0x00000000000000000000001af3f329e8be154074d8769d1ffa4ee058b1dbc301",
+    "native": false,
+    "decimals": 18,
+    "coinId": "dai"
+  },
+  {
+    "address": "0x2170ed0880ac9a755fd29b2688956bd959f933f8",
+    "name": "ETH",
+    "symbol": "ETH.bsc",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/ETH.bsc/logo.png",
+    "resourceId": "0x00000000000000000000002170ed0880ac9a755fd29b2688956bd959f933f801",
+    "native": false,
+    "decimals": 18,
+    "coinId": "ethereum"
+  },
+  {
+    "address": "0x3674D64AaB971aB974B2035667a4B3d09B5ec2B3",
+    "name": "MOVR from MoonRiver",
+    "symbol": "MOVR",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/MOVR/logo.png",
+    "resourceId": "0x0000000000000000000000f50225a84382c74cbdea10b0c176f71fc3de0c4d01",
+    "native": false,
+    "decimals": 18,
+    "coinId": "moonriver"
+  },
+  {
+    "address": "0x27d72484f1910F5d0226aFA4E03742c9cd2B297a",
+    "name": "Moonscape",
+    "symbol": "MSCP",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/MSCP/logo.png",
+    "resourceId": "0x0000000000000000000005c22ba65f65adffadfc0947382f2e7c286a0fe45505",
+    "native": false,
+    "decimals": 18,
+    "coinId": "moonscape"
+  },
+  {
+    "address": "0xBd2949F67DcdC549c6Ebe98696449Fa79D988A9F",
+    "name": "Meter Governance mapped by Meter.io",
+    "symbol": "MTRG",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/MTRG/logo.png",
+    "resourceId": "0x0000000000000000000000bd2949f67dcdc549c6ebe98696449fa79d988a9f01",
+    "native": false,
+    "decimals": 18,
+    "coinId": "meter"
+  },
+  {
+    "address": "0xed4Bb33F20F32E989AF975196E86019773A7CFf0",
+    "name": "UTU Coin",
+    "symbol": "UTU",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/UTU/logo.png",
+    "resourceId": "0x0000000000000000000000a58a4f5c4bb043d2cc1e170613b74e767c94189b01",
+    "native": false,
+    "decimals": 18,
+    "tokenProxy": "0xd4183192BfaA828fCcfb599948964C0BFFdE933c",
+    "coinId": "utu-coin"
+  },
+  {
+    "address": "0xe138c66982Fd5c890c60b94FDBa1747faF092c20",
+    "name": "Offshift",
+    "symbol": "XFT",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/XFT/logo.png",
+    "resourceId": "0x000000000000000000000abe580e7ee158da464b51ee1a83ac0289622e6be001",
+    "native": false,
+    "decimals": 18,
+    "coinId": "offshift"
+  }
+]

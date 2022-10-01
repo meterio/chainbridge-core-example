@@ -1,0 +1,132 @@
+[
+  {
+    "address": "0x4EdF8E0778967012D46968ceadb75436d0426f88",
+    "name": "BEPRO Network",
+    "symbol": "BEPRO",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/BEPRO/logo.png",
+    "resourceId": "0x0000000000000000000000cf3c8be2e2c42331da80ef210e9b1b307c03d36a01",
+    "native": false,
+    "decimals": 18,
+    "coinId": "bet-protocol"
+  },
+  {
+    "address": "0x7B37d0787A3424A0810E02b24743a45eBd5530B2",
+    "name": "BUSD from BSC on Moonbeam",
+    "symbol": "BUSD.bsc",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/BUSD/logo.png",
+    "resourceId": "0x0000000000000000000000e9e7cea3dedca5984780bafc599bd69add087d5601",
+    "native": false,
+    "decimals": 18,
+    "coinId": "binance-usd"
+  },
+  {
+    "address": "0x1aBB8FdE5e64be3419FceF80df335C68dD2956C7",
+    "name": "Crowns",
+    "symbol": "CWS",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/CWS/logo.png",
+    "resourceId": "0x0000000000000000000000ac0104cca91d167873b8601d2e71eb3d4d8c33e001",
+    "native": false,
+    "decimals": 18,
+    "coinId": "crowns"
+  },
+  {
+    "address": "0xAcc15dC74880C9944775448304B263D191c6077F",
+    "name": "GLMR",
+    "symbol": "GLMR",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/GLMR/logo.png",
+    "resourceId": "0x0000000000000000000000acc15dc74880c9944775448304b263d191c6077f01",
+    "native": true,
+    "decimals": 18,
+    "coinId": "moonbeam"
+  },
+  {
+    "address": "0x0B5B9806b1B202e22aA26Cfd527fDCafEF9eDAcf",
+    "name": "MOVR from MoonRiver",
+    "symbol": "MOVR",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/MOVR/logo.png",
+    "resourceId": "0x0000000000000000000000f50225a84382c74cbdea10b0c176f71fc3de0c4d01",
+    "native": false,
+    "decimals": 18,
+    "coinId": "moonriver"
+  },
+  {
+    "address": "0xB60590313975f0d98821B6Cab5Ea2a6d9641D7B6",
+    "name": "Moonscape",
+    "symbol": "MSCP",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/MSCP/logo.png",
+    "resourceId": "0x0000000000000000000005c22ba65f65adffadfc0947382f2e7c286a0fe45505",
+    "native": false,
+    "decimals": 18,
+    "coinId": "moonscape"
+  },
+  {
+    "address": "0xBd2949F67DcdC549c6Ebe98696449Fa79D988A9F",
+    "name": "Meter Governance mapped by Meter.io",
+    "symbol": "MTRG",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/MTRG/logo.png",
+    "resourceId": "0x0000000000000000000000bd2949f67dcdc549c6ebe98696449fa79d988a9f01",
+    "native": false,
+    "decimals": 18,
+    "coinId": "meter"
+  },
+  {
+    "address": "0x8b29344f368b5FA35595325903fE0eAab70C8E1F",
+    "name": "Polkamarkets",
+    "symbol": "POLK",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/POLK/logo.png",
+    "resourceId": "0x0000000000000000000000d478161c952357f05f0292b56012cd8457f1cfbf01",
+    "native": false,
+    "decimals": 18,
+    "coinId": "polkamarkets"
+  },
+  {
+    "address": "0x4bDE98731149093a12579D71338fd3741fe6E5Ce",
+    "name": "RiverBoat",
+    "symbol": "RIB",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/RIB/logo.png",
+    "resourceId": "0x000000000000000000000bd90a6125a84e5c512129d622a75cdde176ade5e504",
+    "native": false,
+    "decimals": 18,
+    "coinId": "riverboat"
+  },
+  {
+    "address": "0x89C36bB2E30efCA78bDEB99101C1Ac1FfcB6a30e",
+    "name": "USDC from MoonRiver on Moonbeam",
+    "symbol": "USDC.movr",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/USDC.movr/logo.png",
+    "resourceId": "0x0000000000000000000000e3f5a90f9cb311505cd691a46596599aa1a0ad7d01",
+    "native": false,
+    "decimals": 6,
+    "coinId": "usd-coin"
+  },
+  {
+    "address": "0x3c751Feb00364CA9e2d0105c40F0b423abf1DEE3",
+    "name": "USDT from Ethereum on Moonbeam",
+    "symbol": "USDT",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/USDT/logo.png",
+    "resourceId": "0x0000000000000000000000dac17f958d2ee523a2206206994597c13d831ec701",
+    "native": false,
+    "decimals": 6,
+    "coinId": "tether"
+  },
+  {
+    "address": "0xE6a991Ffa8CfE62B0bf6BF72959A3d4f11B2E0f5",
+    "name": "Volt from Meter on Moonbeam",
+    "symbol": "VOLT",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/VOLT/logo.png",
+    "resourceId": "0x00000000000000000000008df95e66cb0ef38f91d2776da3c921768982fba001",
+    "native": false,
+    "decimals": 18,
+    "coinId": "volt"
+  },
+  {
+    "address": "0xf64FA5155D8cc578D473A21FB67507DDCbB80D21",
+    "name": "WBTC from Ethereum on Moonbeam",
+    "symbol": "WBTC",
+    "imageUri": "https://raw.githubusercontent.com/meterio/token-list/master/data/WBTC/logo.png",
+    "resourceId": "0x00000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c59901",
+    "native": false,
+    "decimals": 8,
+    "coinId": "wrapped-bitcoin"
+  }
+]
