@@ -4,6 +4,7 @@ const axios = require('axios').default;
 
 // ------------------------------------
 let bridgeABI = require('./abi/bridge.json');
+let handlerABI = require('./abi/ERC20Handler.json');
 
 let avalancheConfig = require('./chain-configs/avalanche.json');
 let bscConfig = require('./chain-configs/bsc.json');
@@ -206,6 +207,16 @@ let callbackFunc = function (error, stdout, stderr) {
 
 async function run(env_config) {
     try {
+
+        let web3; // = new Web3(env_config['url']);
+        let bridgeContract; // = new web3.eth.Contract(bridgeABI, env_config['bridge']);
+
+        if (env_config['url'] && env_config['bridge']) {
+            // return
+            web3 = new Web3(env_config['url']);
+            bridgeContract = new web3.eth.Contract(bridgeABI, env_config['bridge']);
+        }
+
         RelayerArr.map(relayer => {
             wrap_exec(`./chainbridge-core-example evm-cli admin add-relayer --bridge ${env_config['bridge']} --relayer ${relayer} --url ${env_config['url']} --private-key ${ADMIN_PRV_KEY}`);
         });
@@ -219,8 +230,19 @@ async function run(env_config) {
                 wrap_exec(`./chainbridge-core-example evm-cli bridge register-resource --bridge ${env_config['bridge']} --handler ${env_config['erc20_hdl']} --resource ${token.resourceId} --target ${token.address} --url ${env_config['url']} --private-key ${ADMIN_PRV_KEY}`)
             }
 
-            wrap_exec(`./chainbridge-core-example evm-cli bridge set-burn --bridge ${env_config['bridge']} --handler ${env_config['erc20_hdl']} --token-contract ${token.address} --url ${env_config['url']} --private-key ${ADMIN_PRV_KEY}`);
-            wrap_exec(`./chainbridge-core-example evm-cli erc20 add-minter --contract ${token.address} --minter ${env_config['erc20_hdl']} --url ${env_config['url']} --private-key ${ADMIN_PRV_KEY}`)
+            if (!bridgeContract) {
+                return
+            }
+
+            let handlerAddress = await bridgeContract.methods._resourceIDToHandlerAddress(token.resourceId).call();
+            let handlerContact = new web3.eth.Contract(handlerABI, handlerAddress);
+
+            let burnable = await handlerContact.methods._burnList(token.address).call();
+
+            if (burnable) {
+                wrap_exec(`./chainbridge-core-example evm-cli bridge set-burn --bridge ${env_config['bridge']} --handler ${env_config['erc20_hdl']} --token-contract ${token.address} --url ${env_config['url']} --private-key ${ADMIN_PRV_KEY}`);
+                wrap_exec(`./chainbridge-core-example evm-cli erc20 add-minter --contract ${token.address} --minter ${env_config['erc20_hdl']} --url ${env_config['url']} --private-key ${ADMIN_PRV_KEY}`)
+            }
         }
 
         if (RELAY_URL && SIGNATURE) {
@@ -232,8 +254,12 @@ async function run(env_config) {
                 return
             }
 
-            let web3 = new Web3(env_config['url']);
-            let bridgeContract = new web3.eth.Contract(bridgeABI, env_config['bridge']);
+            // let web3 = new Web3(env_config['url']);
+            // let bridgeContract = new web3.eth.Contract(bridgeABI, env_config['bridge']);
+
+            if (!bridgeContract) {
+                return
+            }
 
             let domainID = await bridgeContract.methods._domainID().call().catch(error => {
                 console.error("domainID", bridgeContract, error.message)
@@ -266,9 +292,15 @@ async function main() {
 
     if (PRODUCTION) {
         const raw_bridge_abi_url = "https://raw.githubusercontent.com/meterio/chainbridge-solidity-v2.0.0-eth/main/artifacts/contracts/Bridge.sol/Bridge.json";
-        let res = await axios.get(raw_bridge_abi_url);
-        if (res && res.data) {
-            bridgeABI = res.data.abi;
+        let res1 = await axios.get(raw_bridge_abi_url);
+        if (res1 && res1.data) {
+            bridgeABI = res1.data.abi;
+        }
+
+        const raw_handler_abi_url = "https://github.com/meterio/chainbridge-solidity-v2.0.0-eth/raw/main/artifacts/contracts/handlers/ERC20Handler.sol/ERC20Handler.json";
+        let res2 = await axios.get(raw_handler_abi_url);
+        if (res2 && res2.data) {
+            handlerABI = res2.data.abi;
         }
     }
 
