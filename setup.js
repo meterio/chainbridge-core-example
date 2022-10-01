@@ -75,15 +75,17 @@ const {
     MATIC_BRIDGE,
     MATIC_ERC20_HDL,
 
-    Relay_URL,
-    Signature,
+    RELAY_URL,
+    SIGNATURE,
 
-    ADMIN_TEST_PRV_KEY,
-    Relayer,
-    Threshold,
+    ADMIN_PRV_KEY,
+    RELAYER,
+    THRESHOLD,
+
+    DRY,
 } = envVariables;
 
-const RelayerArr = Relayer.split(',');
+const RelayerArr = RELAYER.split(',');
 
 let ENV_config = {};
 
@@ -175,89 +177,97 @@ let callbackFunc = function (error, stdout, stderr) {
 
 async function run(env_config) {
     RelayerArr.map(relayer => {
-        // admin add-relayer
-        exec(`./chainbridge-core-example evm-cli admin add-relayer --bridge ${env_config['bridge']} --relayer ${relayer} --url ${env_config['url']} --private-key ${ADMIN_TEST_PRV_KEY}`, callbackFunc);
+        wrap_exec(`./chainbridge-core-example evm-cli admin add-relayer --bridge ${env_config['bridge']} --relayer ${relayer} --url ${env_config['url']} --private-key ${ADMIN_PRV_KEY}`);
     });
 
-    // admin set-threshold
-    exec(`./chainbridge-core-example evm-cli admin set-threshold --bridge ${env_config['bridge']} --threshold ${Threshold} --url ${env_config['url']} --private-key ${ADMIN_TEST_PRV_KEY}`, callbackFunc);
+    wrap_exec(`./chainbridge-core-example evm-cli admin set-threshold --bridge ${env_config['bridge']} --threshold ${THRESHOLD} --url ${env_config['url']} --private-key ${ADMIN_PRV_KEY}`);
 
     for (const token of env_config.tokens) {
         if (token.native) {
-            // bridge register-native-resource
-            exec(`./chainbridge-core-example evm-cli bridge register-native-resource --bridge ${env_config['bridge']} --handler ${env_config['erc20_hdl']} --resource ${token.resourceId} --target ${token.address} --native true --url ${env_config['url']} --private-key ${ADMIN_TEST_PRV_KEY}`, callbackFunc)
+            wrap_exec(`./chainbridge-core-example evm-cli bridge register-native-resource --bridge ${env_config['bridge']} --handler ${env_config['erc20_hdl']} --resource ${token.resourceId} --target ${token.address} --native true --url ${env_config['url']} --private-key ${ADMIN_PRV_KEY}`)
         } else {
-            // bridge register-resource
-            exec(`./chainbridge-core-example evm-cli bridge register-resource --bridge ${env_config['bridge']} --handler ${env_config['erc20_hdl']} --resource ${token.resourceId} --target ${token.address} --url ${env_config['url']} --private-key ${ADMIN_TEST_PRV_KEY}`, callbackFunc)
+            wrap_exec(`./chainbridge-core-example evm-cli bridge register-resource --bridge ${env_config['bridge']} --handler ${env_config['erc20_hdl']} --resource ${token.resourceId} --target ${token.address} --url ${env_config['url']} --private-key ${ADMIN_PRV_KEY}`)
         }
 
-        // bridge set-burn
-        exec(`./chainbridge-core-example evm-cli bridge set-burn --bridge ${env_config['bridge']} --handler ${env_config['erc20_hdl']} --token-contract ${token.address} --url ${env_config['url']} --private-key ${ADMIN_TEST_PRV_KEY}`, callbackFunc);
-
-        // erc20 add-minter
-        exec(`./chainbridge-core-example evm-cli erc20 add-minter --contract ${token.address} --minter ${env_config['erc20_hdl']} --url ${env_config['url']} --private-key ${ADMIN_TEST_PRV_KEY}`, callbackFunc)
+        wrap_exec(`./chainbridge-core-example evm-cli bridge set-burn --bridge ${env_config['bridge']} --handler ${env_config['erc20_hdl']} --token-contract ${token.address} --url ${env_config['url']} --private-key ${ADMIN_PRV_KEY}`);
+        wrap_exec(`./chainbridge-core-example evm-cli erc20 add-minter --contract ${token.address} --minter ${env_config['erc20_hdl']} --url ${env_config['url']} --private-key ${ADMIN_PRV_KEY}`)
     }
 
-    if (Relay_URL && Signature) {
+    if (RELAY_URL && SIGNATURE) {
         let web3 = new Web3(env_config['url']);
         let bridgeContract = new web3.eth.Contract(bridgeABI, env_config['bridge']);
 
-        let domainID = await bridgeContract.methods._domainID().call();
-        let chainID = await web3.eth.getChainId();
-
-        // relaychain set-threshold
-        exec(`./chainbridge-core-example evm-cli relaychain set-threshold --signature ${Signature} --domain ${domainID} --threshold ${Threshold} --url ${Relay_URL} --private-key ${ADMIN_TEST_PRV_KEY}`, callbackFunc);
-
         RelayerArr.map(relayer => {
-            // relaychain add-relayer
-            exec(`./chainbridge-core-example evm-cli relaychain add-relayer --signature ${Signature} --relayer ${relayer} --url ${Relay_URL} --private-key ${ADMIN_TEST_PRV_KEY}`, callbackFunc);
+            wrap_exec(`./chainbridge-core-example evm-cli relaychain add-relayer --signature ${SIGNATURE} --relayer ${relayer} --url ${RELAY_URL} --private-key ${ADMIN_PRV_KEY}`);
         });
 
-        // admin set-dest-chain-id
-        exec(`./chainbridge-core-example evm-cli admin set-dest-chain-id --signature ${Signature} --domain ${domainID} --chainId ${chainID} --url ${Relay_URL} --private-key ${ADMIN_TEST_PRV_KEY}`, callbackFunc);
+        let domainID = await bridgeContract.methods._domainID().call().catch(console.error);
+        if (domainID) {
+            wrap_exec(`./chainbridge-core-example evm-cli relaychain set-threshold --signature ${SIGNATURE} --domain ${domainID} --threshold ${THRESHOLD} --url ${RELAY_URL} --private-key ${ADMIN_PRV_KEY}`);
+        }
+
+        let chainID = await web3.eth.getChainId().catch(console.error);
+        if (domainID && chainID) {
+            wrap_exec(`./chainbridge-core-example evm-cli admin set-dest-chain-id --signature ${SIGNATURE} --domain ${domainID} --chainId ${chainID} --url ${RELAY_URL} --private-key ${ADMIN_PRV_KEY}`);
+        }
+    }
+}
+
+function wrap_exec(command) {
+    console.info(command);
+    if (!DRY) {
+        exec(command, callbackFunc);
     }
 }
 
 async function main() {
     if (metertestConfig) {
+        console.info('metertestConfig ----------------------------------');
         await run(ENV_config["metertestConfig"]);
     }
 
-    // ------------
-
-    if (avalancheConfig && false) {
+    if (avalancheConfig) {
+        console.info('avalancheConfig ----------------------------------');
         await run(ENV_config["avalancheConfig"]);
     }
 
-    if (bscConfig && false) {
+    if (bscConfig) {
+        console.info('bscConfig ----------------------------------');
         await run(ENV_config["bscConfig"]);
     }
 
-    if (ethereumConfig && false) {
+    if (ethereumConfig) {
+        console.info('ethereumConfig ----------------------------------');
         await run(ENV_config["ethereumConfig"]);
     }
 
-    if (meterConfig && false) {
+    if (meterConfig) {
+        console.info('meterConfig ----------------------------------');
         await run(ENV_config["meterConfig"]);
     }
 
-    if (moonbeamConfig && false) {
+    if (moonbeamConfig) {
+        console.info('moonbeamConfig ----------------------------------');
         await run(ENV_config["moonbeamConfig"]);
     }
 
-    if (moonriverConfig && false) {
+    if (moonriverConfig) {
+        console.info('moonriverConfig ----------------------------------');
         await run(ENV_config["moonriverConfig"]);
     }
 
-    if (polisConfig && false) {
+    if (polisConfig) {
+        console.info('polisConfig ----------------------------------');
         await run(ENV_config["polisConfig"]);
     }
 
-    if (polygonConfig && false) {
+    if (polygonConfig) {
+        console.info('polygonConfig ----------------------------------');
         await run(ENV_config["polygonConfig"]);
     }
 
-    if (thetaConfig && false) {
+    if (thetaConfig) {
+        console.info('thetaConfig ----------------------------------');
         await run(ENV_config["thetaConfig"]);
     }
 }
