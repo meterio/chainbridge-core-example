@@ -1,24 +1,25 @@
 const Web3 = require('web3');
 const {exec} = require("child_process");
+const axios = require('axios').default;
 
 // ------------------------------------
-const bridgeABI = require('./abi/bridge.json');
+let bridgeABI = require('./abi/bridge.json');
 
-const avalancheConfig = require('./chain-configs/avalanche.json');
-const bscConfig = require('./chain-configs/bsc.json');
-const bsctestConfig = require('./chain-configs/bsctest.json');
-const ethereumConfig = require('./chain-configs/ethereum.json');
-const meterConfig = require('./chain-configs/meter.json');
-const metertestConfig = require('./chain-configs/metertest.json');
-const moonbeamConfig = require('./chain-configs/moonbeam.json');
-const moonriverConfig = require('./chain-configs/moonriver.json');
-const polisConfig = require('./chain-configs/polis.json');
-const polygonConfig = require('./chain-configs/polygon.json');
-const ropstenConfig = require('./chain-configs/ropsten.json');
-const telostestConfig = require('./chain-configs/telostest.json');
-const thetaConfig = require('./chain-configs/theta.json');
-const thetatestConfig = require('./chain-configs/thetatest.json');
-const voltatestConfig = require('./chain-configs/voltatest.json');
+let avalancheConfig = require('./chain-configs/avalanche.json');
+let bscConfig = require('./chain-configs/bsc.json');
+let bsctestConfig = require('./chain-configs/bsctest.json');
+let ethereumConfig = require('./chain-configs/ethereum.json');
+let meterConfig = require('./chain-configs/meter.json');
+let metertestConfig = require('./chain-configs/metertest.json');
+let moonbeamConfig = require('./chain-configs/moonbeam.json');
+let moonriverConfig = require('./chain-configs/moonriver.json');
+let polisConfig = require('./chain-configs/polis.json');
+let polygonConfig = require('./chain-configs/polygon.json');
+let ropstenConfig = require('./chain-configs/ropsten.json');
+let telostestConfig = require('./chain-configs/telostest.json');
+let thetaConfig = require('./chain-configs/theta.json');
+let thetatestConfig = require('./chain-configs/thetatest.json');
+let voltatestConfig = require('./chain-configs/voltatest.json');
 // ------------------------------------
 
 require('dotenv').config();
@@ -83,82 +84,110 @@ const {
     THRESHOLD,
 
     DRY,
+    PRODUCTION,
 } = envVariables;
 
 const RelayerArr = RELAYER.split(',');
 
 let ENV_config = {};
 
-ENV_config["avalancheConfig"] = {
-    "url": AVAX_URL,
-    "bridge": AVAX_BRIDGE,
-    "erc20_hdl": AVAX_ERC20_HDL,
-    "generic_hdl": AVAX_GENERIC_HDL,
-    tokens: avalancheConfig
-};
-ENV_config["bscConfig"] = {
-    "url": BSC_URL,
-    "bridge": BSC_BRIDGE,
-    "erc20_hdl": BSC_ERC20_HDL,
-    "generic_hdl": BSC_GENERIC_HDL,
-    tokens: bscConfig
-};
-ENV_config["ethereumConfig"] = {
-    "url": ETH_URL,
-    "bridge": ETH_BRIDGE,
-    "erc20_hdl": ETH_ERC20_HDL,
-    "generic_hdl": ETH_GENERIC_HDL,
-    tokens: ethereumConfig
-};
-ENV_config["meterConfig"] = {
-    "url": MTR_URL,
-    "bridge": MTR_BRIDGE,
-    "erc20_hdl": MTR_ERC20_HDL,
-    "generic_hdl": MTR_GENERIC_HDL,
-    tokens: meterConfig
-};
-ENV_config["metertestConfig"] = {
-    "url": MTRTEST_URL,
-    "bridge": MTRTEST_BRIDGE,
-    "erc20_hdl": MTRTEST_ERC20_HDL,
-    "generic_hdl": MTRTEST_GENERIC_HDL,
-    tokens: metertestConfig
-};
-ENV_config["moonbeamConfig"] = {
-    "url": GLMR_URL,
-    "bridge": GLMR_BRIDGE,
-    "erc20_hdl": GLMR_ERC20_HDL,
-    "generic_hdl": "",
-    tokens: moonbeamConfig
-};
-ENV_config["moonriverConfig"] = {
-    "url": MOVR_URL,
-    "bridge": MOVR_BRIDGE,
-    "erc20_hdl": MOVR_ERC20_HDL,
-    "generic_hdl": "",
-    tokens: moonriverConfig
-};
-ENV_config["polisConfig"] = {
-    "url": POLIS_URL,
-    "bridge": POLIS_BRIDGE,
-    "erc20_hdl": POLIS_ERC20_HDL,
-    "generic_hdl": "",
-    tokens: polisConfig
-};
-ENV_config["polygonConfig"] = {
-    "url": MATIC_URL,
-    "bridge": MATIC_BRIDGE,
-    "erc20_hdl": MATIC_ERC20_HDL,
-    "generic_hdl": "",
-    tokens: polygonConfig
-};
-ENV_config["thetaConfig"] = {
-    "url": THETA_URL,
-    "bridge": THETA_BRIDGE,
-    "erc20_hdl": THETA_ERC20_HDL,
-    "generic_hdl": "",
-    tokens: thetaConfig
-};
+async function fetch_config(chain) {
+    let res = await axios.get(`https://raw.githubusercontent.com/meterio/token-list/master/generated/chain-configs/${chain}.json`);
+    if (res && res.data) {
+        return res.data
+    }
+}
+
+async function set_env_config() {
+    if (PRODUCTION) {
+        avalancheConfig = await fetch_config("avalanche");
+        bscConfig = await fetch_config("bsc");
+        bsctestConfig = await fetch_config("bsctest");
+        ethereumConfig = await fetch_config("ethereum");
+        meterConfig = await fetch_config("meter");
+        metertestConfig = await fetch_config("metertest");
+        moonbeamConfig = await fetch_config("moonbeam");
+        moonriverConfig = await fetch_config("moonriver");
+        polisConfig = await fetch_config("polis");
+        polygonConfig = await fetch_config("polygon");
+        ropstenConfig = await fetch_config("ropsten");
+        telostestConfig = await fetch_config("telostest");
+        thetaConfig = await fetch_config("theta");
+        thetatestConfig = await fetch_config("thetatest");
+        voltatestConfig = await fetch_config("voltatest");
+    }
+
+    ENV_config["avalancheConfig"] = {
+        "url": AVAX_URL,
+        "bridge": AVAX_BRIDGE,
+        "erc20_hdl": AVAX_ERC20_HDL,
+        "generic_hdl": AVAX_GENERIC_HDL,
+        tokens: avalancheConfig
+    };
+    ENV_config["bscConfig"] = {
+        "url": BSC_URL,
+        "bridge": BSC_BRIDGE,
+        "erc20_hdl": BSC_ERC20_HDL,
+        "generic_hdl": BSC_GENERIC_HDL,
+        tokens: bscConfig
+    };
+    ENV_config["ethereumConfig"] = {
+        "url": ETH_URL,
+        "bridge": ETH_BRIDGE,
+        "erc20_hdl": ETH_ERC20_HDL,
+        "generic_hdl": ETH_GENERIC_HDL,
+        tokens: ethereumConfig
+    };
+    ENV_config["meterConfig"] = {
+        "url": MTR_URL,
+        "bridge": MTR_BRIDGE,
+        "erc20_hdl": MTR_ERC20_HDL,
+        "generic_hdl": MTR_GENERIC_HDL,
+        tokens: meterConfig
+    };
+    ENV_config["metertestConfig"] = {
+        "url": MTRTEST_URL,
+        "bridge": MTRTEST_BRIDGE,
+        "erc20_hdl": MTRTEST_ERC20_HDL,
+        "generic_hdl": MTRTEST_GENERIC_HDL,
+        tokens: metertestConfig
+    };
+    ENV_config["moonbeamConfig"] = {
+        "url": GLMR_URL,
+        "bridge": GLMR_BRIDGE,
+        "erc20_hdl": GLMR_ERC20_HDL,
+        "generic_hdl": "",
+        tokens: moonbeamConfig
+    };
+    ENV_config["moonriverConfig"] = {
+        "url": MOVR_URL,
+        "bridge": MOVR_BRIDGE,
+        "erc20_hdl": MOVR_ERC20_HDL,
+        "generic_hdl": "",
+        tokens: moonriverConfig
+    };
+    ENV_config["polisConfig"] = {
+        "url": POLIS_URL,
+        "bridge": POLIS_BRIDGE,
+        "erc20_hdl": POLIS_ERC20_HDL,
+        "generic_hdl": "",
+        tokens: polisConfig
+    };
+    ENV_config["polygonConfig"] = {
+        "url": MATIC_URL,
+        "bridge": MATIC_BRIDGE,
+        "erc20_hdl": MATIC_ERC20_HDL,
+        "generic_hdl": "",
+        tokens: polygonConfig
+    };
+    ENV_config["thetaConfig"] = {
+        "url": THETA_URL,
+        "bridge": THETA_BRIDGE,
+        "erc20_hdl": THETA_ERC20_HDL,
+        "generic_hdl": "",
+        tokens: thetaConfig
+    };
+}
 
 let callbackFunc = function (error, stdout, stderr) {
     if (error) {
@@ -227,12 +256,22 @@ async function run(env_config) {
 
 function wrap_exec(command) {
     console.info(command);
-    if (!DRY) {
+    if (PRODUCTION && !DRY) {
         exec(command, callbackFunc);
     }
 }
 
 async function main() {
+    await set_env_config();
+
+    if (PRODUCTION) {
+        const raw_bridge_abi_url = "https://raw.githubusercontent.com/meterio/chainbridge-solidity-v2.0.0-eth/main/artifacts/contracts/Bridge.sol/Bridge.json";
+        let res = await axios.get(raw_bridge_abi_url);
+        if (res && res.data) {
+            bridgeABI = res.data.abi;
+        }
+    }
+
     if (metertestConfig) {
         console.info('---------------------------------- metertestConfig ----------------------------------');
         await run(ENV_config["metertestConfig"]);
