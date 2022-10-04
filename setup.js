@@ -237,16 +237,22 @@ async function runItem(env_config, prefix) {
                 return
             }
 
-            let handlerAddress = await bridgeContract.methods._resourceIDToHandlerAddress(token.resourceId).call({ gas: 4700000 });
+            let handlerAddress = await bridgeContract.methods._resourceIDToHandlerAddress(token.resourceId).call({gas: 4700000});
             // console.info("resourceId", token.resourceId, "handlerAddress", handlerAddress, "Provider", web3.currentProvider.host);
+
+            if (env_config['erc20_hdl'] !== handlerAddress) {
+                console.warn("# mismatch:", prefix, "resourceId", token.resourceId, "handlerAddress", handlerAddress, "ERC20_HDL", env_config['erc20_hdl']);
+                return
+            }
+
             if (handlerAddress === "0x0000000000000000000000000000000000000000") {
                 return
             }
 
-            let handlerContact = new web3.eth.Contract(handlerABI, handlerAddress);
+            let handlerContact = new web3.eth.Contract(handlerABI, env_config['erc20_hdl']);
 
-            let burnable = await handlerContact.methods._burnList(token.address).call({ gas: 4700000 });
-            // console.info("handlerAddress", handlerAddress, "token.address", token.address, burnable);
+            let burnable = await handlerContact.methods._burnList(token.address).call({gas: 4700000});
+            // console.info("handlerAddress", handlerAddress, env_config['erc20_hdl'], "token.address", token.address, burnable);
 
             if (burnable) {
                 console.info(`./chainbridge-core-example evm-cli bridge set-burn --bridge $${prefix}_BRIDGE --handler $${prefix}_ERC20_HDL --token-contract ${token.address} --url $${prefix}_URL --private-key $ADMIN_PRV_KEY`);
@@ -266,15 +272,12 @@ async function runItem(env_config, prefix) {
                 return
             }
 
-            // let web3 = new Web3(env_config['url']);
-            // let bridgeContract = new web3.eth.Contract(bridgeABI, env_config['bridge']);
-
             if (!bridgeContract) {
                 return
             }
 
             let domainID = await bridgeContract.methods._domainID().call().catch(error => {
-                console.error("domainID", bridgeContract, error.message)
+                console.error("#", prefix, "domainID", error.message)
             });
             if (domainID) {
                 console.info(`./chainbridge-core-example evm-cli relaychain set-threshold --signature $SIGNATURE --domain ${domainID} --threshold $THRESHOLD --url $RELAY_URL --private-key $ADMIN_PRV_KEY`);
@@ -282,7 +285,7 @@ async function runItem(env_config, prefix) {
             }
 
             let chainID = await web3.eth.getChainId().catch(error => {
-                console.error("chainID", bridgeContract, error.message)
+                console.error("#", prefix, "chainID", error.message)
             });
             if (domainID && chainID) {
                 console.info(`./chainbridge-core-example evm-cli admin set-dest-chain-id --signature $SIGNATURE --domain ${domainID} --chainId ${chainID} --url $RELAY_URL --private-key $ADMIN_PRV_KEY`);
