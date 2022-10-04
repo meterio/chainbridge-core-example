@@ -277,7 +277,7 @@ async function runItem(env_config, prefix) {
             }
 
             let domainID = await bridgeContract.methods._domainID().call().catch(error => {
-                console.error("#", prefix, "domainID", error.message)
+                console.error("#", prefix, "Bridge", bridgeContract.options.address, bridgeContract.address, "domainID", error.message)
             });
             if (domainID) {
                 console.info(`./chainbridge-core-example evm-cli relaychain set-threshold --signature $SIGNATURE --domain ${domainID} --threshold $THRESHOLD --url $RELAY_URL --private-key $ADMIN_PRV_KEY`);
@@ -285,7 +285,7 @@ async function runItem(env_config, prefix) {
             }
 
             let chainID = await web3.eth.getChainId().catch(error => {
-                console.error("#", prefix, "chainID", error.message)
+                console.error("#", prefix, "Bridge", bridgeContract.options.address, "chainID", error.message)
             });
             if (domainID && chainID) {
                 console.info(`./chainbridge-core-example evm-cli admin set-dest-chain-id --signature $SIGNATURE --domain ${domainID} --chainId ${chainID} --url $RELAY_URL --private-key $ADMIN_PRV_KEY`);
@@ -293,7 +293,7 @@ async function runItem(env_config, prefix) {
             }
         }
     } catch (e) {
-        console.error(e)
+        console.error("#", e)
     }
 }
 
