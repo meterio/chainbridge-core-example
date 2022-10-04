@@ -205,9 +205,8 @@ let callbackFunc = function (error, stdout, stderr) {
     }
 };
 
-async function run(env_config) {
+async function runItem(env_config, prefix) {
     try {
-
         let web3; // = new Web3(env_config['url']);
         let bridgeContract; // = new web3.eth.Contract(bridgeABI, env_config['bridge']);
 
@@ -218,15 +217,19 @@ async function run(env_config) {
         }
 
         RelayerArr.map(relayer => {
+            console.info(`./chainbridge-core-example evm-cli admin add-relayer --bridge $${prefix}_BRIDGE --relayer ${relayer} --url $${prefix}_URL --private-key $ADMIN_PRV_KEY`);
             wrap_exec(`./chainbridge-core-example evm-cli admin add-relayer --bridge ${env_config['bridge']} --relayer ${relayer} --url ${env_config['url']} --private-key ${ADMIN_PRV_KEY}`);
         });
 
+        console.info(`./chainbridge-core-example evm-cli admin set-threshold --bridge $${prefix}_BRIDGE --threshold $THRESHOLD --url $${prefix}_URL --private-key $ADMIN_PRV_KEY`);
         wrap_exec(`./chainbridge-core-example evm-cli admin set-threshold --bridge ${env_config['bridge']} --threshold ${THRESHOLD} --url ${env_config['url']} --private-key ${ADMIN_PRV_KEY}`);
 
         for (const token of env_config.tokens) {
             if (token.native) {
+                console.info(`./chainbridge-core-example evm-cli bridge register-native-resource --bridge $${prefix}_BRIDGE --handler $${prefix}_ERC20_HDL --resource ${token.resourceId} --target ${token.address} --native true --url $${prefix}_URL --private-key $ADMIN_PRV_KEY`)
                 wrap_exec(`./chainbridge-core-example evm-cli bridge register-native-resource --bridge ${env_config['bridge']} --handler ${env_config['erc20_hdl']} --resource ${token.resourceId} --target ${token.address} --native true --url ${env_config['url']} --private-key ${ADMIN_PRV_KEY}`)
             } else {
+                console.info(`./chainbridge-core-example evm-cli bridge register-resource --bridge $${prefix}_BRIDGE --handler $${prefix}_ERC20_HDL --resource ${token.resourceId} --target ${token.address} --url $${prefix}_URL --private-key $ADMIN_PRV_KEY`)
                 wrap_exec(`./chainbridge-core-example evm-cli bridge register-resource --bridge ${env_config['bridge']} --handler ${env_config['erc20_hdl']} --resource ${token.resourceId} --target ${token.address} --url ${env_config['url']} --private-key ${ADMIN_PRV_KEY}`)
             }
 
@@ -234,19 +237,28 @@ async function run(env_config) {
                 return
             }
 
-            let handlerAddress = await bridgeContract.methods._resourceIDToHandlerAddress(token.resourceId).call();
+            let handlerAddress = await bridgeContract.methods._resourceIDToHandlerAddress(token.resourceId).call({ gas: 4700000 });
+            // console.info("resourceId", token.resourceId, "handlerAddress", handlerAddress, "Provider", web3.currentProvider.host);
+            if (handlerAddress === "0x0000000000000000000000000000000000000000") {
+                return
+            }
+
             let handlerContact = new web3.eth.Contract(handlerABI, handlerAddress);
 
-            let burnable = await handlerContact.methods._burnList(token.address).call();
+            let burnable = await handlerContact.methods._burnList(token.address).call({ gas: 4700000 });
+            // console.info("handlerAddress", handlerAddress, "token.address", token.address, burnable);
 
             if (burnable) {
+                console.info(`./chainbridge-core-example evm-cli bridge set-burn --bridge $${prefix}_BRIDGE --handler $${prefix}_ERC20_HDL --token-contract ${token.address} --url $${prefix}_URL --private-key $ADMIN_PRV_KEY`);
                 wrap_exec(`./chainbridge-core-example evm-cli bridge set-burn --bridge ${env_config['bridge']} --handler ${env_config['erc20_hdl']} --token-contract ${token.address} --url ${env_config['url']} --private-key ${ADMIN_PRV_KEY}`);
+                console.info(`./chainbridge-core-example evm-cli erc20 add-minter --contract ${token.address} --minter $${prefix}_ERC20_HDL --url $${prefix}_URL --private-key $ADMIN_PRV_KEY`);
                 wrap_exec(`./chainbridge-core-example evm-cli erc20 add-minter --contract ${token.address} --minter ${env_config['erc20_hdl']} --url ${env_config['url']} --private-key ${ADMIN_PRV_KEY}`)
             }
         }
 
         if (RELAY_URL && SIGNATURE) {
             RelayerArr.map(relayer => {
+                console.info(`./chainbridge-core-example evm-cli relaychain add-relayer --signature $SIGNATURE --relayer ${relayer} --url $RELAY_URL --private-key $ADMIN_PRV_KEY`);
                 wrap_exec(`./chainbridge-core-example evm-cli relaychain add-relayer --signature ${SIGNATURE} --relayer ${relayer} --url ${RELAY_URL} --private-key ${ADMIN_PRV_KEY}`);
             });
 
@@ -265,6 +277,7 @@ async function run(env_config) {
                 console.error("domainID", bridgeContract, error.message)
             });
             if (domainID) {
+                console.info(`./chainbridge-core-example evm-cli relaychain set-threshold --signature $SIGNATURE --domain ${domainID} --threshold $THRESHOLD --url $RELAY_URL --private-key $ADMIN_PRV_KEY`);
                 wrap_exec(`./chainbridge-core-example evm-cli relaychain set-threshold --signature ${SIGNATURE} --domain ${domainID} --threshold ${THRESHOLD} --url ${RELAY_URL} --private-key ${ADMIN_PRV_KEY}`);
             }
 
@@ -272,6 +285,7 @@ async function run(env_config) {
                 console.error("chainID", bridgeContract, error.message)
             });
             if (domainID && chainID) {
+                console.info(`./chainbridge-core-example evm-cli admin set-dest-chain-id --signature $SIGNATURE --domain ${domainID} --chainId ${chainID} --url $RELAY_URL --private-key $ADMIN_PRV_KEY`);
                 wrap_exec(`./chainbridge-core-example evm-cli admin set-dest-chain-id --signature ${SIGNATURE} --domain ${domainID} --chainId ${chainID} --url ${RELAY_URL} --private-key ${ADMIN_PRV_KEY}`);
             }
         }
@@ -281,7 +295,7 @@ async function run(env_config) {
 }
 
 function wrap_exec(command) {
-    console.info(command);
+    // console.info(command);
     if (PRODUCTION && !DRY) {
         exec(command, callbackFunc);
     }
@@ -305,53 +319,53 @@ async function main() {
     }
 
     if (metertestConfig) {
-        console.info('---------------------------------- metertestConfig ----------------------------------');
-        await run(ENV_config["metertestConfig"]);
+        console.info('# ---------------------------------- metertestConfig ----------------------------------');
+        await runItem(ENV_config["metertestConfig"], "MTRTEST");
     }
 
     if (avalancheConfig) {
-        console.info('---------------------------------- avalancheConfig ----------------------------------');
-        await run(ENV_config["avalancheConfig"]);
+        console.info('# ---------------------------------- avalancheConfig ----------------------------------');
+        await runItem(ENV_config["avalancheConfig"], "AVAX");
     }
 
     if (bscConfig) {
-        console.info('---------------------------------- bscConfig ----------------------------------');
-        await run(ENV_config["bscConfig"]);
+        console.info('# ---------------------------------- bscConfig ----------------------------------');
+        await runItem(ENV_config["bscConfig"], "BSC");
     }
 
     if (ethereumConfig) {
-        console.info('---------------------------------- ethereumConfig ----------------------------------');
-        await run(ENV_config["ethereumConfig"]);
+        console.info('# ---------------------------------- ethereumConfig ----------------------------------');
+        await runItem(ENV_config["ethereumConfig"], "ETH");
     }
 
     if (meterConfig) {
-        console.info('---------------------------------- meterConfig ----------------------------------');
-        await run(ENV_config["meterConfig"]);
+        console.info('# ---------------------------------- meterConfig ----------------------------------');
+        await runItem(ENV_config["meterConfig"], "MTR");
     }
 
     if (moonbeamConfig) {
-        console.info('---------------------------------- moonbeamConfig ----------------------------------');
-        await run(ENV_config["moonbeamConfig"]);
+        console.info('# ---------------------------------- moonbeamConfig ----------------------------------');
+        await runItem(ENV_config["moonbeamConfig"], "GLMR");
     }
 
     if (moonriverConfig) {
-        console.info('---------------------------------- moonriverConfig ----------------------------------');
-        await run(ENV_config["moonriverConfig"]);
+        console.info('# ---------------------------------- moonriverConfig ----------------------------------');
+        await runItem(ENV_config["moonriverConfig"], "MOVR");
     }
 
     if (polisConfig) {
-        console.info('---------------------------------- polisConfig ----------------------------------');
-        await run(ENV_config["polisConfig"]);
+        console.info('# ---------------------------------- polisConfig ----------------------------------');
+        await runItem(ENV_config["polisConfig"], "POLIS");
     }
 
     if (polygonConfig) {
-        console.info('---------------------------------- polygonConfig ----------------------------------');
-        await run(ENV_config["polygonConfig"]);
+        console.info('# ---------------------------------- polygonConfig ----------------------------------');
+        await runItem(ENV_config["polygonConfig"], "MATIC");
     }
 
     if (thetaConfig) {
-        console.info('---------------------------------- thetaConfig ----------------------------------');
-        await run(ENV_config["thetaConfig"]);
+        console.info('# ---------------------------------- thetaConfig ----------------------------------');
+        await runItem(ENV_config["thetaConfig"], "THETA");
     }
 }
 
