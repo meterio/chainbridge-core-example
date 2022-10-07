@@ -4,7 +4,7 @@ version: '3'
 
 services:
   relayer_1:
-    image: chainsafe/chainbridge-core-example:main
+    image: meterio/chainbridge-core-example:main
     container_name: relayer_1
     volumes:
       - ./config:/config
@@ -18,7 +18,7 @@ services:
       - --latest
 
   relayer_2:
-    image: chainsafe/chainbridge-core-example:main
+    image: meterio/chainbridge-core-example:main
     container_name: relayer_2
     volumes:
       - ./config:/config
@@ -32,7 +32,7 @@ services:
       - --latest
 
   relayer_3:
-    image: chainsafe/chainbridge-core-example:main
+    image: meterio/chainbridge-core-example:main
     container_name: relayer_3
     volumes:
       - ./config:/config
