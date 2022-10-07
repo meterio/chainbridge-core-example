@@ -3,44 +3,14 @@
 version: '3'
 
 services:
-  relayer_1:
-    image: meterio/chainbridge-core-example:main
-    container_name: relayer_1
+  bridge:
+    build:
+      context: .
+    container_name: bridge
+    environment:
+      - KEYSTORE_PASSWORD=password
+    command: --config /config/config.json
     volumes:
       - ./config:/config
-      - ./keys:/keys
-    environment:
-      - KEYSTORE_PASSWORD=passwordpassword
-    command:
-      - run
-      - --config=/config/relayer_1.json
-      - --keystore=/keys
-      - --latest
-
-  relayer_2:
-    image: meterio/chainbridge-core-example:main
-    container_name: relayer_2
-    volumes:
-      - ./config:/config
-      - ./keys:/keys
-    environment:
-      - KEYSTORE_PASSWORD=passwordpassword
-    command:
-      - run
-      - --config=/config/relayer_2.json
-      - --keystore=/keys
-      - --latest
-
-  relayer_3:
-    image: meterio/chainbridge-core-example:main
-    container_name: relayer_3
-    volumes:
-      - ./config:/config
-      - ./keys:/keys
-    environment:
-      - KEYSTORE_PASSWORD=passwordpassword
-    command:
-      - run
-      - --config=/config/relayer_3.json
-      - --keystore=/keys
-      - --latest
+      - ./keys:/keys/
+    network_mode: host
