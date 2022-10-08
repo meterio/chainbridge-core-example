@@ -2,7 +2,7 @@ module github.com/ChainSafe/chainbridge-core-example
 
 go 1.17
 
-replace github.com/ChainSafe/chainbridge-core => github.com/meterio/chainbridge-core v1.0.0
+replace github.com/ChainSafe/chainbridge-core => github.com/meterio/chainbridge-core v1.0.1
 
 //replace github.com/ChainSafe/chainbridge-core => ../chainbridge-core // dev
 
