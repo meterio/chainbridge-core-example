@@ -2,9 +2,9 @@ module github.com/ChainSafe/chainbridge-core-example
 
 go 1.17
 
-replace github.com/ChainSafe/chainbridge-core => github.com/meterio/chainbridge-core v1.0.4
+//replace github.com/ChainSafe/chainbridge-core => github.com/meterio/chainbridge-core relaychain
 
-//replace github.com/ChainSafe/chainbridge-core => ../chainbridge-core // dev
+replace github.com/ChainSafe/chainbridge-core => ../chainbridge-core
 
 require (
 	github.com/ChainSafe/chainbridge-celo-module v0.0.0-20220121131741-69b2ecf7dec5
