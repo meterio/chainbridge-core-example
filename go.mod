@@ -2,14 +2,14 @@ module github.com/ChainSafe/chainbridge-core-example
 
 go 1.17
 
-//replace github.com/ChainSafe/chainbridge-core => github.com/meterio/chainbridge-core relaychain
+//replace github.com/meterio/chainbridge-core => github.com/meterio/chainbridge-core relaychain
 
-replace github.com/ChainSafe/chainbridge-core => ../chainbridge-core
+// replace github.com/meterio/chainbridge-core => ../chainbridge-core
 
 require (
 	github.com/ChainSafe/chainbridge-celo-module v0.0.0-20220121131741-69b2ecf7dec5
-	github.com/ChainSafe/chainbridge-core v0.0.0-20220120162654-c03a4d159125
 	github.com/ethereum/go-ethereum v1.10.16
+	github.com/meterio/chainbridge-core v1.0.5
 	github.com/rs/zerolog v1.26.1
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.10.1
@@ -17,6 +17,7 @@ require (
 )
 
 require (
+	github.com/ChainSafe/chainbridge-core v0.0.0-20220120162654-c03a4d159125 // indirect
 	github.com/StackExchange/wmi v1.2.1 // indirect
 	github.com/btcsuite/btcd v0.22.0-beta // indirect
 	github.com/centrifuge/go-substrate-rpc-client v2.0.0+incompatible // indirect

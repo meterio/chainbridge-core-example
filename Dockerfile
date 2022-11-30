@@ -2,9 +2,8 @@
 # SPDX-License-Identifier: LGPL-3.0-only
 
 FROM  golang:1.17-stretch AS builder
-ADD ./chainbridge-core /src/chainbridge-core
-ADD ./chainbridge-core-example /src/chainbridge-core-example
-WORKDIR /src/chainbridge-core-example
+ADD . /src
+WORKDIR /src
 RUN go mod download
 RUN go build -o /bridge .
 

@@ -1,18 +1,18 @@
 // Copyright 2021 ChainSafe Systems
 // SPDX-License-Identifier: LGPL-3.0-only
 
-//nolint
+// nolint
 package e2e_test
 
 import (
 	"testing"
 
 	"github.com/ChainSafe/chainbridge-celo-module/transaction"
-	"github.com/ChainSafe/chainbridge-core/chains/evm/calls/evmclient"
-	"github.com/ChainSafe/chainbridge-core/chains/evm/calls/evmtransaction"
-	"github.com/ChainSafe/chainbridge-core/chains/evm/cli/local"
-	"github.com/ChainSafe/chainbridge-core/e2e/evm"
-	"github.com/ChainSafe/chainbridge-core/keystore"
+	"github.com/meterio/chainbridge-core/chains/evm/calls/evmclient"
+	"github.com/meterio/chainbridge-core/chains/evm/calls/evmtransaction"
+	"github.com/meterio/chainbridge-core/chains/evm/cli/local"
+	"github.com/meterio/chainbridge-core/e2e/evm"
+	"github.com/meterio/chainbridge-core/keystore"
 	"github.com/stretchr/testify/suite"
 )
 

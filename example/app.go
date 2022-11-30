@@ -4,21 +4,22 @@
 package example
 
 import (
-	_ "github.com/ChainSafe/chainbridge-core/config/chain"
 	"os"
 	"os/signal"
 	"syscall"
 
-	"github.com/ChainSafe/chainbridge-core/chains/evm"
-	"github.com/ChainSafe/chainbridge-core/chains/evm/calls/evmtransaction"
-	"github.com/ChainSafe/chainbridge-core/config"
-	"github.com/ChainSafe/chainbridge-core/flags"
-	"github.com/ChainSafe/chainbridge-core/lvldb"
-	"github.com/ChainSafe/chainbridge-core/opentelemetry"
-	"github.com/ChainSafe/chainbridge-core/relayer"
-	"github.com/ChainSafe/chainbridge-core/store"
-	"github.com/ChainSafe/chainbridge-core/util"
+	_ "github.com/meterio/chainbridge-core/config/chain"
+
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/meterio/chainbridge-core/chains/evm"
+	"github.com/meterio/chainbridge-core/chains/evm/calls/evmtransaction"
+	"github.com/meterio/chainbridge-core/config"
+	"github.com/meterio/chainbridge-core/flags"
+	"github.com/meterio/chainbridge-core/lvldb"
+	"github.com/meterio/chainbridge-core/opentelemetry"
+	"github.com/meterio/chainbridge-core/relayer"
+	"github.com/meterio/chainbridge-core/store"
+	"github.com/meterio/chainbridge-core/util"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 )
