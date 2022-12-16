@@ -1,4 +1,4 @@
-module github.com/ChainSafe/chainbridge-core-example
+module github.com/meterio/chainbridge-core-example
 
 go 1.17
 
@@ -9,7 +9,7 @@ go 1.17
 require (
 	github.com/ChainSafe/chainbridge-celo-module v0.0.0-20220121131741-69b2ecf7dec5
 	github.com/ethereum/go-ethereum v1.10.16
-	github.com/meterio/chainbridge-core v1.0.5
+	github.com/meterio/chainbridge-core v1.0.6
 	github.com/rs/zerolog v1.26.1
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.10.1
@@ -41,6 +41,7 @@ require (
 	github.com/jackpal/go-nat-pmp v1.0.2 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
+	github.com/nxadm/tail v1.4.8 // indirect
 	github.com/pelletier/go-toml v1.9.4 // indirect
 	github.com/pierrec/xxHash v0.1.5 // indirect
 	github.com/pkg/errors v0.9.1 // indirect

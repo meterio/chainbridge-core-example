@@ -5,7 +5,7 @@ package cmd
 
 import (
 	cCLI "github.com/ChainSafe/chainbridge-celo-module/cli"
-	"github.com/ChainSafe/chainbridge-core-example/example"
+	"github.com/meterio/chainbridge-core-example/example"
 	evmCLI "github.com/meterio/chainbridge-core/chains/evm/cli"
 	"github.com/meterio/chainbridge-core/flags"
 	"github.com/rs/zerolog/log"
