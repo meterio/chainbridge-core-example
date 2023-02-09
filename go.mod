@@ -9,7 +9,7 @@ go 1.17
 require (
 	github.com/ChainSafe/chainbridge-celo-module v0.0.0-20220121131741-69b2ecf7dec5
 	github.com/ethereum/go-ethereum v1.10.16
-	github.com/meterio/chainbridge-core v1.0.10
+	github.com/meterio/chainbridge-core v1.0.11
 	github.com/rs/zerolog v1.26.1
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.10.1
