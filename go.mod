@@ -4,12 +4,12 @@ go 1.17
 
 //replace github.com/meterio/chainbridge-core => github.com/meterio/chainbridge-core relaychain
 
-// replace github.com/meterio/chainbridge-core => ../chainbridge-core
+replace github.com/meterio/chainbridge-core => ../chainbridge-core
 
 require (
 	github.com/ChainSafe/chainbridge-celo-module v0.0.0-20220121131741-69b2ecf7dec5
 	github.com/ethereum/go-ethereum v1.10.16
-	github.com/meterio/chainbridge-core v1.0.24
+	github.com/meterio/chainbridge-core v1.0.25
 	github.com/rs/zerolog v1.26.1
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.10.1
