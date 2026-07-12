@@ -578,6 +578,8 @@ github.com/mattn/go-tty v0.0.0-20180907095812-13ff1204f104/go.mod h1:XPvLUNfbS4f
 github.com/matttproud/golang_protobuf_extensions v1.0.1/go.mod h1:D8He9yQNgCq6Z5Ld7szi9bcBfOoFv/3dc6xSMkL2PC0=
 github.com/meterio/chainbridge-core v1.0.27 h1:IR12pkpzdIffI9QDJBS224Mkob49LmZoe9yZsAYZyLo=
 github.com/meterio/chainbridge-core v1.0.27/go.mod h1:lHfhl7xCD4tZ2BnSvPLXkbNHSbCwO4rb+4e9HL/12XA=
+github.com/meterio/chainbridge-core v1.0.28 h1:Drm6m7YtcHThI1ztNoijCroXIN+tCS9SQG53nj37yrw=
+github.com/meterio/chainbridge-core v1.0.28/go.mod h1:lHfhl7xCD4tZ2BnSvPLXkbNHSbCwO4rb+4e9HL/12XA=
 github.com/miekg/dns v1.0.14/go.mod h1:W1PPwlIAgtquWBMBEV9nkV9Cazfe8ScdGz/Lj7v3Nrg=
 github.com/miekg/dns v1.1.26/go.mod h1:bPDLeHnStXmXAq1m/Ch/hvfNHr14JKNPMBo3VZKjuso=
 github.com/miekg/dns v1.1.41/go.mod h1:p6aan82bvRIyn+zDIv9xYNUpwa73JcSh9BKwknJysuI=
